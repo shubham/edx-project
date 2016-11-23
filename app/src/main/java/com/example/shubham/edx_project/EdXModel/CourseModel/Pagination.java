@@ -1,9 +1,10 @@
 
 package com.example.shubham.edx_project.EdXModel.CourseModel;
 
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
 public class Pagination {
@@ -13,7 +14,7 @@ public class Pagination {
     private int count;
     @SerializedName("previous")
     @Expose
-    private Object previous;
+    private String previous;
     @SerializedName("num_pages")
     @Expose
     private int numPages;
@@ -35,7 +36,7 @@ public class Pagination {
      * @param next
      * @param numPages
      */
-    public Pagination(int count, Object previous, int numPages, String next) {
+    public Pagination(int count, String previous, int numPages, String next) {
         this.count = count;
         this.previous = previous;
         this.numPages = numPages;
@@ -65,7 +66,7 @@ public class Pagination {
      * @return
      *     The previous
      */
-    public Object getPrevious() {
+    public String getPrevious() {
         return previous;
     }
 
@@ -74,7 +75,7 @@ public class Pagination {
      * @param previous
      *     The previous
      */
-    public void setPrevious(Object previous) {
+    public void setPrevious(String previous) {
         this.previous = previous;
     }
 

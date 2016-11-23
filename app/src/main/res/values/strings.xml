@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">EdX_Project</string>
+    <string name="find_courses">Find Course</string>
+    <string name="find_courses_description">Press to Find Courses</string>
+    <string name="phonetic_app_name" translatable="false">phonetic_platform_name</string>
+    <string name="edx_logo_image">Edx Logo Image</string>
+    <string name="favourite_courses">Favourite Courses</string>
+    <string name="favourite_courses_description">Press to Favourite Courses</string>
+    <string name="previous_button">Previous</string>
+    <string name="next_button">Next</string>
 </resources>

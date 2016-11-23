@@ -1,9 +1,10 @@
 
 package com.example.shubham.edx_project.EdXModel.CourseModel;
 
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
 public class CourseVideo {

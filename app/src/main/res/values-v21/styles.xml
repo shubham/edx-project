@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="custom_edx" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:navigationBarColor">@color/bright_foreground_inverse_material_light</item>
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/item_back</item>
+        <item name="android:colorBackground">@color/colorPrimaryDark</item>
+    </style>
+</resources>
