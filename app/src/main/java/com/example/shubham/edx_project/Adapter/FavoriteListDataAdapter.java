@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * inflates data into the favorite list
+ *
  * Created by shubham on 22/11/16.
  */
 public class FavoriteListDataAdapter extends ArrayAdapter implements View.OnClickListener {

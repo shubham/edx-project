@@ -1,6 +1,8 @@
 package com.example.shubham.edx_project.EdXModel.DBModelDataProvider;
 
 /**
+ * FavoriteList Provider for database
+ *
  * Created by shubham on 22/11/16.
  */
 public class FavoriteListDataProvider {

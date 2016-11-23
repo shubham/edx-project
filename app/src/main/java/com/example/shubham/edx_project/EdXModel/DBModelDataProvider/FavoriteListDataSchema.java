@@ -1,6 +1,8 @@
 package com.example.shubham.edx_project.EdXModel.DBModelDataProvider;
 
 /**
+ * Database Schema
+ *
  * Created by shubham on 22/11/16.
  */
 public class FavoriteListDataSchema {

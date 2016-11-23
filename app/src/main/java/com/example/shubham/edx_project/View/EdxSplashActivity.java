@@ -10,6 +10,8 @@ import com.example.shubham.edx_project.R;
 import com.squareup.picasso.Picasso;
 
 /**
+ * splash activity
+ *
  * Created by shubham on 17/11/16.
  */
 public class EdxSplashActivity extends AppCompatActivity {

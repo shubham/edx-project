@@ -21,6 +21,8 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 /**
+ * inflates data into the RecyclerView
+ *
  * Created by shubham on 17/11/16.
  */
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder>  {

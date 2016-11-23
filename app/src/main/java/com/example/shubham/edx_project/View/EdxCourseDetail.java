@@ -12,7 +12,9 @@ import android.widget.TextView;
 import com.example.shubham.edx_project.EdXModel.DetailModel.CourseDetail;
 import com.example.shubham.edx_project.EdxServerInstance.EdxRequestInterface;
 import com.example.shubham.edx_project.EdxServerInstance.ServiceGenerator;
+
 import com.example.shubham.edx_project.R;
+
 import com.squareup.picasso.Picasso;
 
 import retrofit2.Call;
@@ -20,6 +22,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
+ * Show Course Detail for a Particular Course
+ *
  * Created by shubham on 21/11/16.
  */
 public class EdxCourseDetail extends AppCompatActivity {
@@ -34,6 +38,10 @@ public class EdxCourseDetail extends AppCompatActivity {
     private TextView mCoursePacing;
     private TextView mCourseDetailText;
 
+    private String mCourseDetailUrl;
+
+    private ProgressDialog mProgressDialog;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,16 +49,25 @@ public class EdxCourseDetail extends AppCompatActivity {
         setContentView(R.layout.detail_layout);
 
         Intent courseIntent=getIntent();
-        String courseDetailUrl=courseIntent.getStringExtra("courseId");
-        final ProgressDialog progressDialog=new ProgressDialog(this);
-        progressDialog.setMessage("Getting data");
-        progressDialog.show();
+        mCourseDetailUrl=courseIntent.getStringExtra("courseId");
+        mProgressDialog=new ProgressDialog(this);
+        mProgressDialog.setMessage("Getting data");
+        mProgressDialog.show();
         initViews();
 
+        loadCourseDetail();
+
+        }
+
+    /**
+     * loadCourseDetail for calling api and setting data in views
+     *
+     */
+    private void loadCourseDetail() {
         EdxRequestInterface edxRequestInterface = ServiceGenerator.getRetrofitInstance().create(EdxRequestInterface.class);
 
-        Log.d("courseDetail", ""+ courseDetailUrl);
-        Call<CourseDetail> courseApiModelCall = edxRequestInterface.getCourseDetail(courseDetailUrl);
+        Log.d("courseDetail", ""+ mCourseDetailUrl);
+        Call<CourseDetail> courseApiModelCall = edxRequestInterface.getCourseDetail(mCourseDetailUrl);
         courseApiModelCall.enqueue(new Callback<CourseDetail>() {
             @Override
             public void onResponse(Call<CourseDetail> call, Response<CourseDetail> response) {
@@ -84,17 +101,19 @@ public class EdxCourseDetail extends AppCompatActivity {
 
                 mCourseDetailText.setText(Html.fromHtml(courseDetail));
 
-                progressDialog.dismiss();
+                mProgressDialog.dismiss();
 
             }
 
             @Override
             public void onFailure(Call<CourseDetail> call, Throwable t) {
                 Log.d("Exception", t.getMessage());
-                progressDialog.dismiss();
+                mProgressDialog.dismiss();
             }
         });
-        }
+
+
+    }
 
     /**
      * initviews for initialsing views of detail_layout
