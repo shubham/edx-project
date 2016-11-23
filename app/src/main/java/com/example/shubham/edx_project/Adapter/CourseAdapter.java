@@ -33,12 +33,12 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
 
    // private String courseIdData;
-    private String orgNameData;
-    private String courseImageLink;
-    private String courseNumberData;
-    private String courseStartDate;
-    private String coursePacingData;
-    private String courseNameData;
+    private String mOrgNameData;
+    private String mCourseImageLink;
+    private String mCourseNumberData;
+    private String mCourseStartDate;
+    private String mCoursePacingData;
+    private String mCourseNameData;
 
     public CourseAdapter(List<Result> courseApiModelList, Context context, LayoutInflater layoutInflater) {
         this.courseApiModelList = courseApiModelList;
@@ -58,33 +58,33 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
         //data getting from json and storing in strings
         try {
-            courseImageLink = courseApiModelList.get(position).getMedia().getImage().getLarge();
-            orgNameData = courseApiModelList.get(position).getOrg();
-            courseNameData = courseApiModelList.get(position).getName();
-            courseNumberData = courseApiModelList.get(position).getNumber();
-            courseStartDate = courseApiModelList.get(position).getStartDisplay();
-            coursePacingData = courseApiModelList.get(position).getPacing();
+            mCourseImageLink = courseApiModelList.get(position).getMedia().getImage().getLarge();
+            mOrgNameData = courseApiModelList.get(position).getOrg();
+            mCourseNameData = courseApiModelList.get(position).getName();
+            mCourseNumberData = courseApiModelList.get(position).getNumber();
+            mCourseStartDate = courseApiModelList.get(position).getStartDisplay();
+            mCoursePacingData = courseApiModelList.get(position).getPacing();
             String courseIdData=courseApiModelList.get(position).getCourseId();
 
             //Logging Coming Data
-            Log.d("Data", courseImageLink);
-            Log.d("Data", coursePacingData);
-            Log.d("Data", courseNameData);
-            if (courseStartDate != null)
-                Log.e("Data", courseStartDate);
+            Log.d("Data", mCourseImageLink);
+            Log.d("Data", mCoursePacingData);
+            Log.d("Data", mCourseNameData);
+            if (mCourseStartDate != null)
+                Log.e("Data", mCourseStartDate);
 
-            Log.d("Data", courseNumberData);
+            Log.d("Data", mCourseNumberData);
             Log.d("Data",courseIdData);
 
             //setting data in views
-            Picasso.with(mContext).load(courseImageLink).error(android.R.drawable.stat_notify_error).into(holder.courseImage);
-            holder.orgName.setText(orgNameData);
-            holder.courseName.setText(courseNameData);
+            Picasso.with(mContext).load(mCourseImageLink).error(android.R.drawable.stat_notify_error).into(holder.courseImage);
+            holder.orgName.setText(mOrgNameData);
+            holder.courseName.setText(mCourseNameData);
             holder.courseName.setTag(courseIdData);
 
-            holder.courseNumber.setText(courseNumberData);
-            holder.startDate.setText(courseStartDate);
-            holder.coursePacing.setText(coursePacingData);
+            holder.courseNumber.setText(mCourseNumberData);
+            holder.startDate.setText(mCourseStartDate);
+            holder.coursePacing.setText(mCoursePacingData);
             holder.favoriteIcon.setTag(courseIdData);
 
         } catch (Exception e) {
@@ -143,7 +143,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
                 mSqLiteDatabase=mFavoriteListDB.getWritableDatabase();
 
-                long checking=mFavoriteListDB.addData((String )view.getTag(),courseNameData,courseNumberData,orgNameData,courseStartDate,coursePacingData,courseImageLink,mSqLiteDatabase);
+                long checking=mFavoriteListDB.addData((String )view.getTag(), mCourseNameData, mCourseNumberData, mOrgNameData, mCourseStartDate, mCoursePacingData, mCourseImageLink,mSqLiteDatabase);
                 //Checking for insertion
                 if(checking>0) {
                     Toast.makeText(mContext, "One Course Added", Toast.LENGTH_SHORT).show();

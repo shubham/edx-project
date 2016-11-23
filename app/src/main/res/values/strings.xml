@@ -8,4 +8,10 @@
     <string name="favourite_courses_description">Press to Favourite Courses</string>
     <string name="previous_button">Previous</string>
     <string name="next_button">Next</string>
+    <string name="network_connection_error">Network Connection not Available</string>
+    <string name="no_course_added">No Course Added</string>
+    <string name="download_data">Downloading data</string>
+    <string name="first_page">This is First page</string>
+    <string name="course_removed">"Course Removed: "</string>
+    <string name="course_not_removed">Course Not Removed</string>
 </resources>

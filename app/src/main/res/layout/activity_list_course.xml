@@ -19,7 +19,7 @@
             android:id="@+id/previous_button"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/height"
             android:background="@drawable/edx_button"
             android:text="@string/previous_button"
             android:layout_marginRight="10dp"
@@ -30,7 +30,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_marginLeft="10dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/height"
             android:background="@drawable/edx_button"
             android:text="@string/next_button"
             android:textColor="@color/white"/>

@@ -13,6 +13,8 @@ import com.example.shubham.edx_project.EdXModel.DBModelDataProvider.FavoriteList
 import static android.content.ContentValues.TAG;
 
 /**
+ *  For Database Operations
+ *
  * Created by shubham on 22/11/16.
  */
 public class FavoriteListDB extends SQLiteOpenHelper {
@@ -54,7 +56,7 @@ public class FavoriteListDB extends SQLiteOpenHelper {
     //method for adding information into db
     public long addData(String iCourseId,String iCourseName,String iCourseNumber,String iCourseOrg,String iCourseStartDate,String iCoursePacing,String iCourseImageUrl,SQLiteDatabase iSqLiteDatabase)
     {
-        long oChecking=0;
+        long checking=0;
         ContentValues iValues=new ContentValues();
         iValues.put(FavoriteListDataSchema.FavouriteList.COURSE_ID,iCourseId);
         iValues.put(FavoriteListDataSchema.FavouriteList.COURSE_NAME,iCourseName);
@@ -68,7 +70,7 @@ public class FavoriteListDB extends SQLiteOpenHelper {
         //inserting in table
         try {
 
-            oChecking =  iSqLiteDatabase.insert(FavoriteListDataSchema.TABLE_NAME, null, iValues);
+            checking =  iSqLiteDatabase.insert(FavoriteListDataSchema.TABLE_NAME, null, iValues);
 
             Log.e("DB operation","insertion successful of one row ");
 
@@ -78,14 +80,14 @@ public class FavoriteListDB extends SQLiteOpenHelper {
         {
             Log.e(TAG, "addData: insertion unsuccessful", e);
         }
-        return oChecking;
+        return checking;
     }
 
 
     //getting data from database table
     public Cursor getDataFromCourseTable(SQLiteDatabase iSqLiteDatabase)
     {
-        Cursor iCursor;
+        Cursor cursor=null;
         String []iProjection={
                 FavoriteListDataSchema.FavouriteList.COURSE_ID,
                 FavoriteListDataSchema.FavouriteList.COURSE_NAME,
@@ -95,11 +97,18 @@ public class FavoriteListDB extends SQLiteOpenHelper {
                 FavoriteListDataSchema.FavouriteList.COURSE_PACING,
                 FavoriteListDataSchema.FavouriteList.COURSE_IMAGE_URL};
 
-        iCursor=iSqLiteDatabase.query(FavoriteListDataSchema.TABLE_NAME,iProjection,null,null,null,null,null);
-        Log.e("DB operation","implementing getting result from database");
+        try {
+            cursor=iSqLiteDatabase.query(FavoriteListDataSchema.TABLE_NAME,iProjection,null,null,null,null,null);
+            Log.e("DB operation","implementing getting result from database");
+
+        }
+        catch (NullPointerException e)
+        {
+            e.printStackTrace();
+        }
 
 
-        return  iCursor;
+        return  cursor;
     }
 
     //delete a particular course from favourite list

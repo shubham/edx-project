@@ -74,6 +74,7 @@ public class EdxCourseDetail extends AppCompatActivity {
                 Log.d("Data", courseNumberData);
                 Log.d("Data",courseDetail);
 
+                //setting data
                 Picasso.with(getApplicationContext()).load(courseImageLink).into(mCourseImage);
                 mOrgName.setText(orgNameData);
                 mCourseName.setText(courseNameData);
@@ -95,6 +96,9 @@ public class EdxCourseDetail extends AppCompatActivity {
         });
         }
 
+    /**
+     * initviews for initialsing views of detail_layout
+     */
     private void initViews() {
 
         mCourseImage = (ImageView) findViewById(R.id.course_image);

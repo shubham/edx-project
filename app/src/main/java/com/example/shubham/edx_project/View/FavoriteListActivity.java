@@ -17,21 +17,21 @@ import com.example.shubham.edx_project.R;
 public class FavoriteListActivity extends AppCompatActivity {
 
     //global variable declaration
-    ListView mListView;
-    SQLiteDatabase mDatabase;
-    FavoriteListDB mFavoriteListDB;
-    Cursor mCursor;
-    FavoriteListDataAdapter mFavoriteListDataAdapter;
-    FavoriteListDataProvider mFavoriteListDataProvider;
+    private ListView mListView;
+    private SQLiteDatabase mDatabase;
+    private FavoriteListDB mFavoriteListDB;
+    private Cursor mCursor;
+    private FavoriteListDataAdapter mFavoriteListDataAdapter;
+    private FavoriteListDataProvider mFavoriteListDataProvider;
 
     //string for data
-    private String courseIdData;
-    private String orgNameData;
-    private String courseImageLink;
-    private String courseNumberData;
-    private String courseStartDate;
-    private String coursePacingData;
-    private String courseNameData;
+    private String mCourseIdData;
+    private String mOrgNameData;
+    private String mCourseImageLink;
+    private String mCourseNumberData;
+    private String mCourseStartDate;
+    private String mCoursePacingData;
+    private String mCourseNameData;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +43,9 @@ public class FavoriteListActivity extends AppCompatActivity {
 
     }
 
+    /**
+     *setViews for setting views and populating data in list from Database
+     */
     public void setViews() {
         mListView=(ListView)findViewById(R.id.favorite_list);
         mFavoriteListDataAdapter=new FavoriteListDataAdapter(getApplicationContext(),R.layout.favorite_list_item);
@@ -55,15 +58,15 @@ public class FavoriteListActivity extends AppCompatActivity {
         {
 
             do {
-                courseIdData=mCursor.getString(0);
-                courseNameData=mCursor.getString(1);
-                courseNumberData=mCursor.getString(2);
-                orgNameData=mCursor.getString(3);
-                courseStartDate=mCursor.getString(4);
-                coursePacingData=mCursor.getString(5);
-                courseImageLink=mCursor.getString(6);
+                mCourseIdData =mCursor.getString(0);
+                mCourseNameData =mCursor.getString(1);
+                mCourseNumberData =mCursor.getString(2);
+                mOrgNameData =mCursor.getString(3);
+                mCourseStartDate =mCursor.getString(4);
+                mCoursePacingData =mCursor.getString(5);
+                mCourseImageLink =mCursor.getString(6);
 
-                mFavoriteListDataProvider=new FavoriteListDataProvider(courseIdData,courseNameData,courseNumberData,orgNameData,courseStartDate,coursePacingData,courseImageLink);
+                mFavoriteListDataProvider=new FavoriteListDataProvider(mCourseIdData, mCourseNameData, mCourseNumberData, mOrgNameData, mCourseStartDate, mCoursePacingData, mCourseImageLink);
 
                 //add to list
                 mFavoriteListDataAdapter.add(mFavoriteListDataProvider);

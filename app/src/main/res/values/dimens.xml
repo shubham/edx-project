@@ -9,4 +9,5 @@
     <dimen name="org_name">12sp</dimen>
     <dimen name="org_course_number">12sp</dimen>
     <dimen name="course_pacing">14sp</dimen>
+    <dimen name="height">40dp</dimen>
 </resources>

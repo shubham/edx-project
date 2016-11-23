@@ -26,35 +26,35 @@ import java.util.List;
  */
 public class FavoriteListDataAdapter extends ArrayAdapter implements View.OnClickListener {
     //variable declaration
-    List favoriteCourseList = new ArrayList();
-    FavoriteListDataProvider mFavoriteListDataProvider;
-    SQLiteDatabase mSqLiteDatabase;
-    FavoriteListDB mFavoriteListDB;
-    FavoriteListActivity mFavoriteListActivity;
+    private List mFavoriteCourseList = new ArrayList();
+    private FavoriteListDataProvider mFavoriteListDataProvider;
+    private SQLiteDatabase mSqLiteDatabase;
+    private FavoriteListDB mFavoriteListDB;
+    private FavoriteListActivity mFavoriteListActivity;
 
 
 
     //handler for favoriteList
-    static class DataHandler {
+     static class DataHandler {
 
-        TextView COURSE_NAME;
-        TextView COURSE_NUMBER;
-        TextView COURSE_ORG;
-        TextView COURSE_START_DATE;
-        TextView COURSE_PACING;
-        ImageView COURSE_IMAGE;
-        ImageView NOT_FAVORITE;
+        TextView mCourseName;
+        TextView mCourseNumber;
+        TextView mCourseOrg;
+        TextView mCourseStartDate;
+        TextView mCoursePacing;
+        ImageView mCourseImage;
+        ImageView mNotFavorite;
 
 
         public DataHandler(View convertView){
 
-            COURSE_NAME=(TextView)convertView.findViewById(R.id.favorite_course_name);
-            COURSE_NUMBER=(TextView)convertView.findViewById(R.id.favorite_course_number_by_organisation);
-            COURSE_ORG=(TextView)convertView.findViewById(R.id.favorite_organisation_name);
-            COURSE_START_DATE=(TextView)convertView.findViewById(R.id.favorite_course_start_date);
-            COURSE_PACING=(TextView)convertView.findViewById(R.id.favorite_pacing_of_course);
-            COURSE_IMAGE=(ImageView)convertView.findViewById(R.id.favorite_course_image);
-            NOT_FAVORITE=(ImageView)convertView.findViewById(R.id.not_favorite_icon);
+            mCourseName =(TextView)convertView.findViewById(R.id.favorite_course_name);
+            mCourseNumber =(TextView)convertView.findViewById(R.id.favorite_course_number_by_organisation);
+            mCourseOrg =(TextView)convertView.findViewById(R.id.favorite_organisation_name);
+            mCourseStartDate =(TextView)convertView.findViewById(R.id.favorite_course_start_date);
+            mCoursePacing =(TextView)convertView.findViewById(R.id.favorite_pacing_of_course);
+            mCourseImage =(ImageView)convertView.findViewById(R.id.favorite_course_image);
+            mNotFavorite=(ImageView)convertView.findViewById(R.id.not_favorite_icon);
 
         }
     }
@@ -68,51 +68,51 @@ public class FavoriteListDataAdapter extends ArrayAdapter implements View.OnClic
     @Override
     public void add(Object object) {
         super.add(object);
-       favoriteCourseList.add(object);
+       mFavoriteCourseList.add(object);
     }
 
     @Override
     public int getCount() {
-        return favoriteCourseList.size();
+        return mFavoriteCourseList.size();
     }
 
     @Nullable
     @Override
     public Object getItem(int position) {
-        return favoriteCourseList.get(position);
+        return mFavoriteCourseList.get(position);
     }
 
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        DataHandler iDataHandler;
+        DataHandler dataHandler;
 
         if (convertView==null)
         {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.favorite_list_item, null);
 
-            iDataHandler = new DataHandler(convertView);
+            dataHandler = new DataHandler(convertView);
 
             //put data into tag
-            convertView.setTag(iDataHandler);
+            convertView.setTag(dataHandler);
         }
         else {
-            iDataHandler = (DataHandler) convertView.getTag();
+            dataHandler = (DataHandler) convertView.getTag();
 
         }
 
         mFavoriteListDataProvider=(FavoriteListDataProvider)this.getItem(position);
         try {
-            iDataHandler.COURSE_NAME.setText(mFavoriteListDataProvider != null ? mFavoriteListDataProvider.getmCourseName() : null);
-            Picasso.with(getContext()).load(mFavoriteListDataProvider.getmCourseImageUrl()).into(iDataHandler.COURSE_IMAGE);
-            iDataHandler.COURSE_NUMBER.setText(mFavoriteListDataProvider.getmCourseNumber());
-            iDataHandler.COURSE_ORG.setText(mFavoriteListDataProvider.getmCourseOrg());
-            iDataHandler.COURSE_START_DATE.setText(mFavoriteListDataProvider.getmCourseStartDate());
-            iDataHandler.COURSE_PACING.setText(mFavoriteListDataProvider.getmCoursePacing());
+            dataHandler.mCourseName.setText(mFavoriteListDataProvider != null ? mFavoriteListDataProvider.getmCourseName() : null);
+            Picasso.with(getContext()).load(mFavoriteListDataProvider.getmCourseImageUrl()).into(dataHandler.mCourseImage);
+            dataHandler.mCourseNumber.setText(mFavoriteListDataProvider.getmCourseNumber());
+            dataHandler.mCourseOrg.setText(mFavoriteListDataProvider.getmCourseOrg());
+            dataHandler.mCourseStartDate.setText(mFavoriteListDataProvider.getmCourseStartDate());
+            dataHandler.mCoursePacing.setText(mFavoriteListDataProvider.getmCoursePacing());
 
-            iDataHandler.NOT_FAVORITE.setOnClickListener(this);
-            iDataHandler.NOT_FAVORITE.setTag(position);
+            dataHandler.mNotFavorite.setOnClickListener(this);
+            dataHandler.mNotFavorite.setTag(position);
         }catch (NullPointerException e)
         {
             Log.e("NullPoint Error",""+e.getMessage());
@@ -136,17 +136,19 @@ public class FavoriteListDataAdapter extends ArrayAdapter implements View.OnClic
 
         if (numberOfRowDeleted==1)
         {
-            Toast.makeText(getContext(),"Course Removed: "+view.getTag(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),""+mFavoriteListActivity.getString(R.string.course_removed)+view.getTag(),Toast.LENGTH_SHORT).show();
             if (view.getTag()!=null)
             {
-                favoriteCourseList.remove((int)view.getTag());
+                mFavoriteCourseList.remove((int)view.getTag());
             }
 
             notifyDataSetChanged();
+            mFavoriteListDB.close();
+            Log.e("DB Operation","Table Close");
         }
         else
         {
-            Toast.makeText(getContext(),"Course Not Removed",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), ""+R.string.course_not_removed,Toast.LENGTH_SHORT).show();
 
         }
 
