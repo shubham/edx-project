@@ -14,7 +14,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0">
+            android:layout_weight="0.30">
 
             <ImageView
                 android:id="@+id/course_image"
@@ -29,7 +29,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="0.70">
 
             <LinearLayout
                 android:id="@+id/layout_item_detail"
@@ -43,7 +43,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:lines="1"
-                    android:text="course_org"
                     android:textSize="@dimen/org_name"
                     android:textStyle="normal" />
 
@@ -55,8 +54,6 @@
                     android:layout_alignParentStart="true"
                     android:layout_below="@id/organisation_name"
                     android:ellipsize="end"
-                    android:lines="1"
-                    android:text="course_name"
                     android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                     android:textSize="@dimen/course_name" />
 
@@ -68,7 +65,6 @@
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/course_name"
                     android:lines="1"
-                    android:text="number_org"
                     android:textSize="@dimen/org_course_number"
                     android:textStyle="normal" />
 
@@ -80,7 +76,6 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:lines="1"
-                    android:text="startdate"
                     android:textSize="@dimen/course_date" />
 
                 <TextView
@@ -90,7 +85,6 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/course_start_date"
-                    android:text="pacing"
                     android:textSize="@dimen/course_pacing"
                     android:textStyle="normal" />
 

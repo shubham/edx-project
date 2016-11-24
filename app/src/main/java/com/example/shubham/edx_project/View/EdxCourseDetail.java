@@ -29,7 +29,6 @@ import retrofit2.Response;
 public class EdxCourseDetail extends AppCompatActivity {
 
     private CourseDetail mCourseDetail;
-
     private ImageView mCourseImage;
     private TextView mOrgName;
     private TextView mCourseName;
@@ -37,12 +36,8 @@ public class EdxCourseDetail extends AppCompatActivity {
     private TextView mStartDate;
     private TextView mCoursePacing;
     private TextView mCourseDetailText;
-
     private String mCourseDetailUrl;
-
     private ProgressDialog mProgressDialog;
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
