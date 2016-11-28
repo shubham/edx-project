@@ -35,11 +35,9 @@ public class EdxProjectActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_ed_xcourse);
         mEdxBackground=(ImageView)findViewById(R.id.edx_background);
         Picasso.with(AppContext.getAppContext()).load(R.drawable.launch_background).into(mEdxBackground);
-
         //button for opening the course activity
         mFindCourseButton = (Button) findViewById(R.id.find_courses_button);
         mFindCourseButton.setOnClickListener(this);
-
         //button for opening the favourite course activity
         mFavouriteCoursesButton=(Button)findViewById(R.id.favourite_courses_button);
         mFavouriteCoursesButton.setOnClickListener(this);
@@ -79,11 +77,13 @@ public class EdxProjectActivity extends AppCompatActivity implements View.OnClic
                     {
                         launchIntent(FavoriteListActivity.class);
                     }
+                    cursor.close();
                 }
                 catch (SQLiteException|NullPointerException e)
                 {
                    e.printStackTrace();
                 }
+
             break;
         }
     }

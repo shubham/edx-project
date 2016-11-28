@@ -2,7 +2,9 @@ package com.example.shubham.edx_project.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.shubham.edx_project.BuildConfig;
 import com.example.shubham.edx_project.EdXModel.CourseModel.Result;
 import com.example.shubham.edx_project.FavoriteListDatabase.FavoriteListDB;
 import com.example.shubham.edx_project.R;
@@ -30,14 +33,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
     private SQLiteDatabase mSqLiteDatabase;
     private Context mContext;
     private FavoriteListDB mFavoriteListDB;
-
-    private String mOrgNameData;
-    private String mCourseImageLink;
-    private String mCourseNumberData;
-    private String mCourseStartDate;
-    private String mCoursePacingData;
-    private String mCourseNameData;
-    private String mCourseIdData;
     // adapter constructor
     public CourseAdapter(List<Result> courseApiModelList, Context context) {
         this.courseApiModelList = courseApiModelList;
@@ -52,13 +47,13 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder, int position) {
         //data getting from json and storing in strings
         try {
-            mCourseImageLink = courseApiModelList.get(position).getMedia().getImage().getLarge();
-            mOrgNameData = courseApiModelList.get(position).getOrg();
-            mCourseNameData = courseApiModelList.get(position).getName();
-            mCourseNumberData = courseApiModelList.get(position).getNumber();
-            mCourseStartDate = courseApiModelList.get(position).getStartDisplay();
-            mCoursePacingData = courseApiModelList.get(position).getPacing();
-            mCourseIdData=courseApiModelList.get(position).getCourseId();
+            String mCourseImageLink = courseApiModelList.get(position).getMedia().getImage().getLarge();
+            String mOrgNameData = courseApiModelList.get(position).getOrg();
+            String mCourseNameData = courseApiModelList.get(position).getName();
+            String mCourseNumberData = courseApiModelList.get(position).getNumber();
+            String mCourseStartDate = courseApiModelList.get(position).getStartDisplay();
+            String mCoursePacingData = courseApiModelList.get(position).getPacing();
+            String mCourseIdData=courseApiModelList.get(position).getCourseId();
             //Logging Coming Data
             Log.d("Data", mCourseImageLink);
             Log.d("Data", mCoursePacingData);
@@ -77,17 +72,34 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
             holder.startDate.setText(mCourseStartDate);
             holder.coursePacing.setText(mCoursePacingData);
             //setting tag for courseId
-            holder.favoriteIcon.setTag(mCourseIdData);
+            holder.favoriteIcon.setTag(position);
+
+            mFavoriteListDB=new FavoriteListDB(mContext);
+            mSqLiteDatabase=mFavoriteListDB.getReadableDatabase();
+            boolean isFavorite=mFavoriteListDB.getFavorite(mSqLiteDatabase,mCourseIdData);
+            if (isFavorite)
+            {
+                Picasso.with(mContext).load(R.drawable.favorite_icon).into(holder.favoriteIcon);
+            }
+            else
+            {
+                Picasso.with(mContext).load(R.drawable.ic_favorite_black_24dp).into(holder.favoriteIcon);
+
+            }
+            mFavoriteListDB.close();
+            mSqLiteDatabase.close();
         }
-        catch (Exception e) {
-            e.printStackTrace();
+        catch (CursorIndexOutOfBoundsException |SQLiteException|NullPointerException e) {
+            if (BuildConfig.DEBUG)
+                throw e;
+            else
+                e.printStackTrace();
         }
     }
     @Override
     public int getItemCount() {
         return (courseApiModelList != null) ? courseApiModelList.size() : 0;
     }
-
     /**
      * ViewHolder Class for smooth scrolling in the view
      */
@@ -99,7 +111,9 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         private TextView courseNumber;
         private TextView startDate;
         private TextView coursePacing;
-        //constructor for initialising the views and calling the activity respective of the button click
+        /**
+         * constructor for initialising the views and calling the activity respective of the button click
+         */
         public ViewHolder(View itemView)
         {
             super(itemView);
@@ -109,36 +123,44 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
             courseNumber = (TextView) itemView.findViewById(R.id.course_number_by_organisation);
             startDate = (TextView) itemView.findViewById(R.id.course_start_date);
             coursePacing = (TextView) itemView.findViewById(R.id.pacing_of_course);
-            favoriteIcon=(ImageView)itemView.findViewById(R.id.favorite_icon);
-
+            favoriteIcon=(ImageView) itemView.findViewById(R.id.favorite_icon);
+            //calling the button click listener
             courseImage.setOnClickListener(this);
             favoriteIcon.setOnClickListener(this);
         }
         @Override
         public void onClick(View view) {
-            if(view.getId()==R.id.course_image)
-            {
-                Intent courseDetailIntent=new Intent(mContext, EdxCourseDetail.class);
-                courseDetailIntent.putExtra("courseId",(String) view.getTag());
-                mContext.startActivity(courseDetailIntent);
-            }
-            if (view.getId()==R.id.favorite_icon)
-            {
-                mFavoriteListDB=new FavoriteListDB(mContext);
-                //getting writable database
-                mSqLiteDatabase=mFavoriteListDB.getWritableDatabase();
-                long checking=mFavoriteListDB.addData((String )view.getTag(), mCourseNameData, mCourseNumberData, mOrgNameData, mCourseStartDate, mCoursePacingData, mCourseImageLink,mSqLiteDatabase);
-                //Checking for insertion
-                if(checking>0) {
-                    Toast.makeText(mContext, "One Course Added", Toast.LENGTH_SHORT).show();
-                    Log.d("DB Operation","one course added");
+            switch (view.getId()) {
+                case R.id.course_image: {
+                    Intent courseDetailIntent = new Intent(mContext, EdxCourseDetail.class);
+                    courseDetailIntent.putExtra("courseId",(String)view.getTag());
+                    mContext.startActivity(courseDetailIntent);
                 }
-                else
-                {
-                    Toast.makeText(mContext, "Already Added", Toast.LENGTH_SHORT).show();
+                break;
+                case R.id.favorite_icon: {
+                    mFavoriteListDB = new FavoriteListDB(mContext);
+                    //getting writable database
+                    mSqLiteDatabase = mFavoriteListDB.getWritableDatabase();
+                    int position = (int)view.getTag();
+                    String mCourseImageLink = courseApiModelList.get(position).getMedia().getImage().getLarge();
+                    String mOrgNameData = courseApiModelList.get(position).getOrg();
+                    String mCourseNameData = courseApiModelList.get(position).getName();
+                    String mCourseNumberData = courseApiModelList.get(position).getNumber();
+                    String mCourseStartDate = courseApiModelList.get(position).getStartDisplay();
+                    String mCoursePacingData = courseApiModelList.get(position).getPacing();
+                    String mCourseIdData=courseApiModelList.get(position).getCourseId();
+                    long checking = mFavoriteListDB.addData(mCourseIdData, mCourseNameData, mCourseNumberData, mOrgNameData, mCourseStartDate, mCoursePacingData, mCourseImageLink, mSqLiteDatabase);
+                    //Checking for insertion
+                    if (checking > 0) {
+                        Toast.makeText(mContext, "One Course Added", Toast.LENGTH_SHORT).show();
+                        Log.d("DB Operation", "one course added");
+                    } else {
+                        Toast.makeText(mContext, "Already Added", Toast.LENGTH_SHORT).show();
+                    }
+                    mFavoriteListDB.close();
+                    Log.d("DB Operation", "Table Close");
                 }
-                mFavoriteListDB.close();
-                Log.d("DB Operation","Table Close");
+                break;
             }
         }
     }

@@ -3,6 +3,7 @@ package com.example.shubham.edx_project.FavoriteListDatabase;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -23,14 +24,17 @@ public class FavoriteListDB extends SQLiteOpenHelper {
     private static final int DB_VERSION=1;
     //table query
     private static final String TABLE_QUERY="CREATE TABLE "+ FavoriteListDataSchema.TABLE_NAME+"("
-            + FavoriteListDataSchema.FavouriteList.COURSE_ID+" TEXT UNIQUE,"
-            + FavoriteListDataSchema.FavouriteList.COURSE_NAME+" TEXT,"
-            + FavoriteListDataSchema.FavouriteList.COURSE_NUMBER+" TEXT,"
-            + FavoriteListDataSchema.FavouriteList.COURSE_ORG+" TEXT,"
-            + FavoriteListDataSchema.FavouriteList.COURSE_START_DATE+" TEXT,"
-            + FavoriteListDataSchema.FavouriteList.COURSE_PACING+" TEXT,"
+            + FavoriteListDataSchema.FavouriteList.COURSE_ID+" TEXT PRIMARY KEY ,"
+            + FavoriteListDataSchema.FavouriteList.COURSE_NAME+" TEXT ,"
+            + FavoriteListDataSchema.FavouriteList.COURSE_NUMBER+" TEXT ,"
+            + FavoriteListDataSchema.FavouriteList.COURSE_ORG+" TEXT ,"
+            + FavoriteListDataSchema.FavouriteList.COURSE_START_DATE+" TEXT ,"
+            + FavoriteListDataSchema.FavouriteList.COURSE_PACING+" TEXT ,"
             + FavoriteListDataSchema.FavouriteList.COURSE_IMAGE_URL+" TEXT);";
-// constructor for databaseHelper class
+    /***
+     *  constructor for databaseHelper class
+     * @param context: for getting activity context
+     */
     public FavoriteListDB(Context context) {
         super(context, DATABASE_NAME, null,DB_VERSION);
         Log.d("DB operation :","table creation or open from constructor ");
@@ -62,6 +66,13 @@ public class FavoriteListDB extends SQLiteOpenHelper {
     public long addData(String iCourseId,String iCourseName,String iCourseNumber,String iCourseOrg,String iCourseStartDate,String iCoursePacing,String iCourseImageUrl,SQLiteDatabase iSqLiteDatabase)
     {
         long checking=0;
+        Log.d("values",iCourseId);
+        Log.d("values",iCourseNumber);
+        Log.d("values",iCourseName);
+        Log.d("values",iCourseOrg);
+        Log.d("values",iCoursePacing);
+        Log.d("values",""+iCourseStartDate);
+
         ContentValues iValues=new ContentValues();
         iValues.put(FavoriteListDataSchema.FavouriteList.COURSE_ID,iCourseId);
         iValues.put(FavoriteListDataSchema.FavouriteList.COURSE_NAME,iCourseName);
@@ -72,7 +83,7 @@ public class FavoriteListDB extends SQLiteOpenHelper {
         iValues.put(FavoriteListDataSchema.FavouriteList.COURSE_IMAGE_URL,iCourseImageUrl);
         //inserting in table
         try {
-            checking =  iSqLiteDatabase.insert(FavoriteListDataSchema.TABLE_NAME, null, iValues);
+            checking =  iSqLiteDatabase.insertOrThrow(FavoriteListDataSchema.TABLE_NAME, null, iValues);
         }
         catch (SQLiteException | NullPointerException e)
         {
@@ -103,13 +114,12 @@ public class FavoriteListDB extends SQLiteOpenHelper {
             cursor=iSqLiteDatabase.query(FavoriteListDataSchema.TABLE_NAME,iProjection,null,null,null,null,null);
             Log.d("DB operation","implementing getting result from database");
         }
-        catch (SQLiteException | NullPointerException e)
+        catch (CursorIndexOutOfBoundsException | SQLiteException | NullPointerException e)
         {
             e.printStackTrace();
         }
         return  cursor;
     }
-
     /**
      * delete a particular course from favourite list
      *
@@ -132,7 +142,38 @@ public class FavoriteListDB extends SQLiteOpenHelper {
         return 0;
     }
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+    }
+    /***
+     *  for setting the favourite course image on loading
+     * @param sqLiteDatabase : for sqliteDatabase instance
+     * @param courseId : for courseId
+     * @return : return boolean value
+     */
+    public  boolean getFavorite(SQLiteDatabase sqLiteDatabase,String courseId)
+    {
+        Cursor cursor=null;
+        boolean isFavorite=false;
+        String []iProjection={
+                FavoriteListDataSchema.FavouriteList.COURSE_ID
+        };
+        try {
+            cursor=sqLiteDatabase.query(FavoriteListDataSchema.TABLE_NAME,iProjection,
+                    FavoriteListDataSchema.FavouriteList.COURSE_ID+
+                    "=?",new String[]{courseId},null,null,null);
+            Log.d("DB operation","implementing getting result from database");
+        }
+        catch (SQLiteException | NullPointerException e)
+        {
+            e.printStackTrace();
+        }
+        finally {
+            if (cursor!=null)
+            {
+                isFavorite=cursor.getCount()==1?true:false;
+                cursor.close();
+            }
+        }
+        return  isFavorite;
     }
 }

@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.shubham.edx_project.Adapter.CourseAdapter;
+import com.example.shubham.edx_project.BuildConfig;
 import com.example.shubham.edx_project.EdXModel.CourseModel.CourseApiModel;
 import com.example.shubham.edx_project.EdXModel.CourseModel.Result;
 import com.example.shubham.edx_project.EdxServerInstance.EdxRequestInterface;
@@ -34,7 +35,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 /**
  * showing courseList
  *
@@ -51,17 +51,12 @@ public class FindCourseActivity extends AppCompatActivity implements View.OnClic
     private ProgressDialog mProgressDialog;
     //id for page number of courses
     int id;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_course);
         id = 1;//default value for page of course
         initViews();
-        //showing the progress dialog
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage("Downloading Course List");
-        mProgressDialog.show();
         loadCourseList(id);
     }
     /**
@@ -92,10 +87,14 @@ public class FindCourseActivity extends AppCompatActivity implements View.OnClic
      * @param id :id for page url
      */
     private void loadCourseList(int id) {
-        EdxRequestInterface edxRequestInterface = ServiceGenerator.getRetrofitInstance().create(EdxRequestInterface.class);
+        //showing the progress dialog
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("Downloading Course List");
+        mProgressDialog.show();
                 Log.d("coursePage", ":" + id);
         //calling the api
         if (NetworkStateChecker.isConnected()) {
+            EdxRequestInterface edxRequestInterface = ServiceGenerator.getRetrofitInstance().create(EdxRequestInterface.class);
             Call<CourseApiModel> courseApiModelCall = edxRequestInterface.getCourse(id);
             courseApiModelCall.enqueue(new Callback<CourseApiModel>() {
                 @Override
@@ -103,9 +102,9 @@ public class FindCourseActivity extends AppCompatActivity implements View.OnClic
                     Log.d("Data", "" + response);
                     mCourseApiModel = response.body();
                     mResultList.clear();
+                    mProgressDialog.dismiss();
                     mResultList.addAll(mCourseApiModel.getResults());
                     mCourseAdapter.notifyDataSetChanged();
-                    mProgressDialog.dismiss();
                 }
                 @Override
                 public void onFailure(Call<CourseApiModel> call, Throwable t) {
@@ -175,7 +174,10 @@ public class FindCourseActivity extends AppCompatActivity implements View.OnClic
         }
         catch (SQLiteException | CursorIndexOutOfBoundsException | NullPointerException e)
         {
-            e.printStackTrace();
+            if (BuildConfig.DEBUG)
+            throw e;
+            else
+                e.printStackTrace();
         }
         return true;
     }
@@ -187,5 +189,10 @@ public class FindCourseActivity extends AppCompatActivity implements View.OnClic
         //opening FavoriteListActivity
         Intent intent=new Intent(AppContext.getAppContext(),iActivityClass);
         startActivity(intent);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadCourseList(id);
     }
 }
